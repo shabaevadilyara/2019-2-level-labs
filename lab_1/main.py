@@ -1,4 +1,4 @@
-text = '' 
+text = ''
 freq_dict = {}
 
 
@@ -59,8 +59,3 @@ def get_top_n(frequencies, top_n):
         return toplist1
     else:
         return()
-
-
-calculate_frequences(text)
-filter_stop_words(frequencies, stop_words)
-get_top_n(frequencies, top_n)
