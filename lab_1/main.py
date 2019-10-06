@@ -1,4 +1,4 @@
-text = ''
+text = '' 
 freq_dict = {}
 
 
