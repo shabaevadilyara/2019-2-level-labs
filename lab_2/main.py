@@ -2,16 +2,6 @@ original_word = 'length'
 target_word = 'kitchen'
 
 
-def save_to_csv(edit_matrix, path_to_file):
-    path_to_file = open('data.csv', 'w')
-    k = 0
-    for i in edit_matrix:
-        for j in edit_matrix[k]:
-            path_to_file.write(j)
-            k += 1
-    path_to_file.close()
-
-
 def generate_edit_matrix(num_rows, num_cols):
     edit_matrix = []
     if num_cols is not None and num_rows is not None and type(num_rows) is int and type(num_cols) is int:
@@ -83,8 +73,6 @@ def find_distance(original_word, target_word, insert_weight, remove_weight, subs
         num_rows = (len(original_word) + 1)
         num_cols = (len(target_word) + 1)
         edit_matrix = generate_edit_matrix(num_rows, num_cols)
-        path_to_file = open('data.csv', 'w')
-        save_to_csv(edit_matrix, path_to_file)
         initialize_edit_matrix(edit_matrix, insert_weight, remove_weight)
         fill_edit_matrix(edit_matrix, insert_weight, remove_weight, substitute_weight, original_word, target_word)
         print(edit_matrix[num_rows - 1][num_cols - 1])
