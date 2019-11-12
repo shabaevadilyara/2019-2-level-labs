@@ -14,6 +14,30 @@ def generate_edit_matrix(num_rows, num_cols):
     return edit_matrix
 
 
+def load_from_csv(path_to_file):
+    file = open(path_to_file)
+    edit_matrix = []
+    for line in file:
+        line = line.split(',')
+        line1 = []
+        for elm in line:
+            line1.append(int(elm))
+        edit_matrix.append(line1)
+    file.close()
+    return edit_matrix
+
+
+def save_to_csv(edit_matrix, path_to_file):
+    file = open('file.csv', 'w')
+    for i in edit_matrix:
+        a = ''
+        for j in i:
+            a += str(j) + ','
+        file.write(a[0:-1])
+        file.write('\n')
+    file.close()
+
+
 def initialize_edit_matrix(edit_matrix, insert_weight, remove_weight):
     edit_matrix = list(edit_matrix)
     k = 0
@@ -60,8 +84,6 @@ def fill_edit_matrix(edit_matrix, insert_weight, remove_weight, substitute_weigh
                     c = edit_matrix[i - 1][j - 1]
                 numbers = (a, b, c)
                 edit_matrix[i][j] = minimum_value(numbers)
-        for i in edit_matrix:
-            print(i)
         return edit_matrix
     else:
         return edit_matrix
@@ -69,25 +91,15 @@ def fill_edit_matrix(edit_matrix, insert_weight, remove_weight, substitute_weigh
 
 def find_distance(original_word, target_word, insert_weight, remove_weight, substitute_weight):
     if type(original_word) is str and type(target_word) is str and insert_weight is not None and remove_weight is not None and substitute_weight is not None and type(insert_weight) is int and type(remove_weight) is int and type(substitute_weight) is int:
-
         num_rows = (len(original_word) + 1)
         num_cols = (len(target_word) + 1)
         edit_matrix = generate_edit_matrix(num_rows, num_cols)
         initialize_edit_matrix(edit_matrix, insert_weight, remove_weight)
         fill_edit_matrix(edit_matrix, insert_weight, remove_weight, substitute_weight, original_word, target_word)
-        print(edit_matrix[num_rows - 1][num_cols - 1])
+        save_to_csv(edit_matrix, 'file.csv')
         return edit_matrix[num_rows - 1][num_cols - 1]
     else:
         return -1
 
 
 find_distance(original_word, target_word, 1, 1, 2)
-
-
-
-
-
-
-
-
-
