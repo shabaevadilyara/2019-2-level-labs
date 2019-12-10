@@ -59,23 +59,58 @@ class NGramTrie:
         self.gram_log_probabilities = {}
         self.sentence_list_main = []
 
-    def fill_from_sentence(self, sentence: tuple) -> str:
+    def fill_from_sentence(self, sentence: tuple):
+        if not isinstance(sentence, tuple):
+            return {}
+
         for i in range(len(sentence) - self.size + 1):
-            bigram = (sentence[i], sentence[i+1])
-            if bigram not in self.gram_frequencies:
-                self.gram_frequencies[bigram] = 1
+            n_gram = []
+            for k in range(self.size):
+                n_gram.append(sentence[i+k])
+            n_gram = tuple(n_gram)
+            if n_gram not in self.gram_frequencies:
+                self.gram_frequencies[n_gram] = 1
             else:
-                self.gram_frequencies[bigram] += 1
-        print(self.gram_frequencies)
-            
+                self.gram_frequencies[n_gram] += 1
+        return self.gram_frequencies
+
     def calculate_log_probabilities(self):
-        pass
+        numbers = {}
+        for k, v in self.gram_frequencies.items():
+            if k[0: self.size - 1] not in numbers:
+                numbers[k[0: self.size - 1]] = v
+            else:
+                numbers[k[0: self.size - 1]] += v
+        for k, v in self.gram_frequencies.items():
+            if k not in self.gram_log_probabilities:
+                P = v/numbers[k[0: self.size - 1]]
+                self.gram_log_probabilities[k] = math.log(P)
+        return self.gram_log_probabilities
 
     def predict_next_sentence(self, prefix: tuple) -> list:
-        pass
+        if not isinstance(prefix, tuple):
+            return []
+        if len(prefix) != self.size-1:
+            return []
+        for j in range(len(self.gram_log_probabilities)):
+            max_value = -10
+            prefix = list(prefix)
+            for i in self.gram_log_probabilities:
+                if list(i[0: self.size - 1]) == prefix[j:] and self.gram_log_probabilities[i] > max_value:
+                    max_value = self.gram_log_probabilities[i]
+            if max_value == -10:
+                return list(prefix)
+            for i in self.gram_log_probabilities:
+                if self.gram_log_probabilities[i] == max_value:
+                    prefix.append(i[-1])
+        return prefix
+
 
 n = NGramTrie(2)
 n.fill_from_sentence((1, 2, 3, 4, 5))
+n.calculate_log_probabilities()
+n.predict_next_sentence((1,))
+
 
 def encode(storage_instance, corpus) -> list:
     encoded_corpus = []
