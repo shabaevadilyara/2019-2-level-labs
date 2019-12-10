@@ -54,15 +54,38 @@ class WordStorage:
             return {}
 
 
-class NGramTrie:
-    def fill_from_sentence(self, sentence: tuple) -> str:
-        pass
+#class NGramTrie:
+    #def __init__(self, size):
+       # self.size = size
+        #self.gram_frequencies = {}
+        #self.gram_log_probabilities = {}
+        #self.sentence_list_main = []
+
+    #def fill_from_sentence(self, sentence: tuple) -> str:
+        #self.sentence_list_main += list(sentence)
+        #sentence_list = list(sentence)
+        #for i in range(len(sentence_list) - self.size + 1):
+            #k = 0
+            #bigram = tuple(sentence_list[i:i + self.size])
+            #if bigram not in self.gram_frequencies.keys():
+                #for m in range(len(self.sentence_list_main) - self.size + 1):
+                    #if self.sentence_list_main[m:m + self.size] == list(bigram):
+                        #k +=1
+                #self.gram_frequencies[bigram] = k
+
+
+            #for j in range(1, len(text[i]) - 1):
+                #self.sentence_list.append(text[i][j-1] + text[i][j])
+            #print(self.sentence_list)
+            #return self.sentence_list
 
     def calculate_log_probabilities(self):
         pass
 
     def predict_next_sentence(self, prefix: tuple) -> list:
         pass
+
+#n = NGramTrie()
 
 
 def encode(storage_instance, corpus) -> list:
@@ -79,25 +102,31 @@ def encode(storage_instance, corpus) -> list:
             new_corpus += encoded_corpus
     else:
         return []
-    print(encoded_corpus)
+    #print(encoded_corpus)
     return encoded_corpus
 
 
 def split_by_sentence(text: str) -> list:
+    if not text or ' ' not in text:
+        return []
+    text += ' A'
     new_text = ''
+    new_new_text = []
     for symbol in text:
         if symbol.isalpha() or symbol == ' ' or symbol in '.!?':
             if symbol in '!?':
                 new_text += '.'
             else:
                 new_text += symbol
-    new_text = new_text[0:-1]
-    if text[i]== '.' and text[i + 1] and text[i + 2] in "QWERTYUIOPLKJHGFDSAZXCVBNM":
-        sent = new_text.split('. "QWERTYUIOPLKJHGFDSAZXCVBNM"')
-    print(new_text)
+    k = 0
+    for i in range(len(new_text) - 2):
+        if new_text[i] == '.' and new_text[i + 1] == ' ' and new_text[i + 2] in " QWERTYUIOPLKJHGFDSAZXCVBNM":
+            new_new_text.append(new_text[k: i])
+            k = i + 2
     new_sentence = []
-    for i in sent:
-        phrase = i.split(' ')
+    for i in new_new_text:
+        phrase1 = i.split(' ')
+        phrase = [symbol.lower() for symbol in phrase1 if symbol != '']
         phrase = ['<s>'] + phrase + ['</s>']
         new_sentence.append(phrase)
     print(new_sentence)
