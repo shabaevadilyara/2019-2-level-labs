@@ -16,11 +16,9 @@ class WordStorage:
         self.storage = {}
 
     def put(self, word: str) -> int:
-        id = 0
         if type(word) is str and word is not None:
             if word not in self.storage:
-                self.storage[word] = id
-                id += 1
+                self.storage[word] = len(self.storage)
         else:
             return {}
         return self.storage[word]
@@ -54,55 +52,42 @@ class WordStorage:
             return {}
 
 
-#class NGramTrie:
-    #def __init__(self, size):
-       # self.size = size
-        #self.gram_frequencies = {}
-        #self.gram_log_probabilities = {}
-        #self.sentence_list_main = []
+class NGramTrie:
+    def __init__(self, size):
+        self.size = size
+        self.gram_frequencies = {}
+        self.gram_log_probabilities = {}
+        self.sentence_list_main = []
 
-    #def fill_from_sentence(self, sentence: tuple) -> str:
-        #self.sentence_list_main += list(sentence)
-        #sentence_list = list(sentence)
-        #for i in range(len(sentence_list) - self.size + 1):
-            #k = 0
-            #bigram = tuple(sentence_list[i:i + self.size])
-            #if bigram not in self.gram_frequencies.keys():
-                #for m in range(len(self.sentence_list_main) - self.size + 1):
-                    #if self.sentence_list_main[m:m + self.size] == list(bigram):
-                        #k +=1
-                #self.gram_frequencies[bigram] = k
-
-
-            #for j in range(1, len(text[i]) - 1):
-                #self.sentence_list.append(text[i][j-1] + text[i][j])
-            #print(self.sentence_list)
-            #return self.sentence_list
-
+    def fill_from_sentence(self, sentence: tuple) -> str:
+        for i in range(len(sentence) - self.size + 1):
+            bigram = (sentence[i], sentence[i+1])
+            if bigram not in self.gram_frequencies:
+                self.gram_frequencies[bigram] = 1
+            else:
+                self.gram_frequencies[bigram] += 1
+        print(self.gram_frequencies)
+            
     def calculate_log_probabilities(self):
         pass
 
     def predict_next_sentence(self, prefix: tuple) -> list:
         pass
 
-#n = NGramTrie()
-
+n = NGramTrie(2)
+n.fill_from_sentence((1, 2, 3, 4, 5))
 
 def encode(storage_instance, corpus) -> list:
     encoded_corpus = []
     new_corpus = []
-    print(corpus)
-    print(storage_instance.storage)
     if corpus is not None:
         for sym in corpus:
             for word in sym:
                 storage_instance.get_id_of(word)
-                print(storage_instance.get_id_of(word))
                 encoded_corpus.append(storage_instance.get_id_of(word))
             new_corpus += encoded_corpus
     else:
         return []
-    #print(encoded_corpus)
     return encoded_corpus
 
 
